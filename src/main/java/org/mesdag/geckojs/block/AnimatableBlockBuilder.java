@@ -1,6 +1,5 @@
 package org.mesdag.geckojs.block;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.block.BlockBuilder;
 import dev.latvian.mods.kubejs.block.BlockItemBuilder;
@@ -18,6 +17,7 @@ import org.mesdag.geckojs.ExtendedGeoModel;
 import org.mesdag.geckojs.GeckoJS;
 import org.mesdag.geckojs.block.entity.AnimatableBlockEntity;
 import org.mesdag.geckojs.block.entity.AnimatableBlockEntityInfo;
+import org.mesdag.geckojs.item.AnimatableItemBuilder;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -26,7 +26,6 @@ import static dev.latvian.mods.rhino.mod.util.JsonUtils.GSON;
 
 @SuppressWarnings("unused")
 public class AnimatableBlockBuilder extends BlockBuilder {
-    private static final JsonObject itemModelJson = new Gson().fromJson("{\"parent\":\"builtin/entity\",\"display\":{\"thirdperson_righthand\":{\"rotation\":[75,45,0],\"translation\":[0,2.5,0],\"scale\":[0.375,0.375,0.375]},\"thirdperson_lefthand\":{\"rotation\":[75,45,0],\"translation\":[0,2.5,0],\"scale\":[0.375,0.375,0.375]},\"firstperson_righthand\":{\"rotation\":[0,115,0],\"scale\":[0.4,0.4,0.4]},\"firstperson_lefthand\":{\"rotation\":[0,225,0],\"scale\":[0.4,0.4,0.4]},\"ground\":{\"translation\":[0,3,0],\"scale\":[0.25,0.25,0.25]},\"gui\":{\"rotation\":[30,137,0],\"translation\":[0,-3.75,0],\"scale\":[0.625,0.625,0.625]},\"fixed\":{\"translation\":[0,-1.5,0],\"scale\":[0.5,0.5,0.5]}}}", JsonObject.class);
     public final transient AnimatableBlockEntityInfo blockEntityInfo = new AnimatableBlockEntityInfo(this);
     private final ExtendedGeoModel<AnimatableBlockEntity> blockModel = new ExtendedGeoModel<>();
     private transient AnimatableBlockItemBuilder itemBuilder;
@@ -89,7 +88,7 @@ public class AnimatableBlockBuilder extends BlockBuilder {
         )).getAsJsonObject();
         generator.json(new ResourceLocation(id.getNamespace(), "models/block/" + id.getPath()), blockModelJson);
         if (itemBuilder != null) {
-            generator.json(AssetJsonGenerator.asItemModelLocation(id), itemModelJson);
+            generator.json(AssetJsonGenerator.asItemModelLocation(id), AnimatableItemBuilder.itemModelJson);
         }
     }
 

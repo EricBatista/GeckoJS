@@ -1,10 +1,12 @@
 package org.mesdag.geckojs.armor;
 
+import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.item.custom.ArmorItemBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import org.mesdag.geckojs.ExtendedGeoModel;
+import org.mesdag.geckojs.item.AnimatableItemBuilder;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.object.PlayState;
 
@@ -15,6 +17,7 @@ import java.util.function.Consumer;
 public class AnimatableArmorBuilder extends ArmorItemBuilder {
     public final ExtendedGeoModel<AnimatableArmorItem> armorModel = new ExtendedGeoModel<>();
     public final transient ArrayList<ControllerCallBack> animations = new ArrayList<>();
+    public transient boolean useGeoModel = false;
 
     public AnimatableArmorBuilder(ResourceLocation id, ArmorItem.Type type) {
         super(id, type);
@@ -30,16 +33,30 @@ public class AnimatableArmorBuilder extends ArmorItemBuilder {
         return this;
     }
 
+    public AnimatableArmorBuilder armorItemUseGeoModel() {
+        this.useGeoModel = true;
+        return this;
+    }
+
     public AnimatableArmorBuilder defaultGeoModel() {
-        armorModel.builder.setSimpleModel(new ResourceLocation(id.getNamespace(), "geo/block/" + id.getPath() + ".geo.json"));
-        armorModel.builder.setSimpleTexture(new ResourceLocation(id.getNamespace(), "textures/block/" + id.getPath() + ".png"));
-        armorModel.builder.setSimpleAnimation(new ResourceLocation(id.getNamespace(), "animations/block/" + id.getPath() + ".animation.json"));
+        armorModel.builder.setSimpleModel(new ResourceLocation(id.getNamespace(), "geo/armor/" + id.getPath() + ".geo.json"));
+        armorModel.builder.setSimpleTexture(new ResourceLocation(id.getNamespace(), "textures/armor/" + id.getPath() + ".png"));
+        armorModel.builder.setSimpleAnimation(new ResourceLocation(id.getNamespace(), "animations/armor/" + id.getPath() + ".animation.json"));
         return this;
     }
 
     @Override
     public Item createObject() {
         return new AnimatableArmorItem(this);
+    }
+
+    @Override
+    public void generateAssetJsons(AssetJsonGenerator generator) {
+        if (useGeoModel) {
+            generator.json(AssetJsonGenerator.asItemModelLocation(id), AnimatableItemBuilder.itemModelJson);
+        } else {
+            super.generateAssetJsons(generator);
+        }
     }
 
     @FunctionalInterface
