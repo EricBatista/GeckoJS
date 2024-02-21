@@ -3,71 +3,50 @@ package org.mesdag.geckojs.item;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Tuple;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import org.mesdag.geckojs.AnimationControllerBuilder;
 import org.mesdag.geckojs.ExtendedGeoModel;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
 
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
 public class AnimatableItemBuilder extends ItemBuilder {
-    public final transient HashMap<ControllerInfo, Hashtable<String, RawAnimation>> animations = new HashMap<>();
-    public final Hashtable<AnimationPredicateCallback, Tuple<String, String>> useTriggers = new Hashtable<>();
-    public final Hashtable<AnimationPredicateCallback, Tuple<String, String>> finishUsingTriggers = new Hashtable<>();
-    public final Hashtable<AnimationPredicateCallback, Tuple<String, String>> releaseUsingTriggers = new Hashtable<>();
     public final ExtendedGeoModel<AnimatableItem> itemModel = new ExtendedGeoModel<>();
+    public UseAnimationCallback useAnimationCallback;
+    public FinishUsingAnimationCallback finishUsingAnimationCallback;
+    public ReleaseUsingAnimationCallback releaseUsingAnimationCallback;
+    public final transient ArrayList<AnimationControllerBuilder<AnimatableItem>> controllers = new ArrayList<>();
 
     public AnimatableItemBuilder(ResourceLocation id) {
         super(id);
     }
 
-    public AnimatableItemBuilder addUseAnimationTrigger(AnimationPredicateCallback callback, String controllerName, String animName) {
-        useTriggers.put(callback, new Tuple<>(controllerName, animName));
+    public AnimatableItemBuilder useAnimation(UseAnimationCallback callback) {
+        this.useAnimationCallback = callback;
         return this;
     }
 
-    public AnimatableItemBuilder addFinishUsingAnimationTrigger(AnimationPredicateCallback callback, String controllerName, String animName) {
-        useTriggers.put(callback, new Tuple<>(controllerName, animName));
+    public AnimatableItemBuilder finishUsingAnimation(FinishUsingAnimationCallback callback) {
+        this.finishUsingAnimationCallback = callback;
         return this;
     }
 
-    public AnimatableItemBuilder addReleaseUsingAnimationTrigger(AnimationPredicateCallback callback, String controllerName, String animName) {
-        useTriggers.put(callback, new Tuple<>(controllerName, animName));
+    public AnimatableItemBuilder releaseUsingAnimation(ReleaseUsingAnimationCallback callback) {
+        this.releaseUsingAnimationCallback = callback;
         return this;
     }
 
-    public AnimatableItemBuilder addController(ControllerCallBack callBack) {
-        animations.put(new ControllerInfo("base_controller", 0, callBack), null);
+    public AnimatableItemBuilder addController(Consumer<AnimationControllerBuilder<AnimatableItem>> consumer) {
+        AnimationControllerBuilder<AnimatableItem> builder = new AnimationControllerBuilder<>();
+        consumer.accept(builder);
+        controllers.add(builder);
         return this;
     }
 
-    public AnimatableItemBuilder addController(String name, ControllerCallBack callBack) {
-        animations.put(new ControllerInfo(name, 0, callBack), null);
-        return this;
-    }
-
-    public AnimatableItemBuilder addController(String name, ControllerCallBack callBack, Map<String, RawAnimation> triggers) {
-        animations.put(new ControllerInfo(name, 0, callBack), (Hashtable<String, RawAnimation>) triggers);
-        return this;
-    }
-
-    public AnimatableItemBuilder addController(String name, int transitionTickTime, ControllerCallBack callBack) {
-        animations.put(new ControllerInfo(name, transitionTickTime, callBack), null);
-        return this;
-    }
-
-    public AnimatableItemBuilder addController(String name, int transitionTickTime, ControllerCallBack callBack, Map<String, RawAnimation> triggers) {
-        animations.put(new ControllerInfo(name, transitionTickTime, callBack), (Hashtable<String, RawAnimation>) triggers);
-        return this;
-    }
-
-    public AnimatableItemBuilder geoModel(Consumer<ExtendedGeoModel.Builder<AnimatableItem>> consumer){
+    public AnimatableItemBuilder geoModel(Consumer<ExtendedGeoModel.Builder<AnimatableItem>> consumer) {
         consumer.accept(itemModel.builder);
         return this;
     }
@@ -85,15 +64,17 @@ public class AnimatableItemBuilder extends ItemBuilder {
     }
 
     @FunctionalInterface
-    public interface ControllerCallBack {
-        PlayState create(AnimationState<AnimatableItem> state);
-    }
-
-    public record ControllerInfo(String name, int transitionTickTime, ControllerCallBack controller) {
+    public interface UseAnimationCallback {
+        void call(AnimatableItem self, ServerLevel serverLevel, Player player, InteractionHand hand);
     }
 
     @FunctionalInterface
-    public interface AnimationPredicateCallback {
-        boolean matches(ServerLevel serverLevel, LivingEntity livingEntity);
+    public interface FinishUsingAnimationCallback {
+        void call(AnimatableItem self, ServerLevel serverLevel, LivingEntity livingEntity);
+    }
+
+    @FunctionalInterface
+    public interface ReleaseUsingAnimationCallback {
+        void call(AnimatableItem self, ServerLevel serverLevel, LivingEntity livingEntity, int tick);
     }
 }

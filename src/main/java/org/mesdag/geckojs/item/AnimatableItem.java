@@ -15,7 +15,6 @@ import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
@@ -32,36 +31,24 @@ public class AnimatableItem extends BasicItemJS implements GeoItem {
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
-        if (level instanceof ServerLevel serverLevel) {
-            itemBuilder.useTriggers.forEach(((predicate, path) -> {
-                if (predicate.matches(serverLevel, player)) {
-                    triggerAnim(player, GeoItem.getOrAssignId(player.getItemInHand(hand), serverLevel), path.getA(), path.getB());
-                }
-            }));
+        if (level instanceof ServerLevel serverLevel && itemBuilder.useAnimationCallback != null) {
+            itemBuilder.useAnimationCallback.call(this, serverLevel, player, hand);
         }
         return super.use(level, player, hand);
     }
 
     @Override
     public @NotNull ItemStack finishUsingItem(@NotNull ItemStack itemStack, @NotNull Level level, @NotNull LivingEntity livingEntity) {
-        if (level instanceof ServerLevel serverLevel) {
-            itemBuilder.finishUsingTriggers.forEach(((predicate, path) -> {
-                if (predicate.matches(serverLevel, livingEntity)) {
-                    triggerAnim(livingEntity, GeoItem.getOrAssignId(itemStack, serverLevel), path.getA(), path.getB());
-                }
-            }));
+        if (level instanceof ServerLevel serverLevel && itemBuilder.finishUsingAnimationCallback != null) {
+            itemBuilder.finishUsingAnimationCallback.call(this, serverLevel, livingEntity);
         }
         return super.finishUsingItem(itemStack, level, livingEntity);
     }
 
     @Override
     public void releaseUsing(@NotNull ItemStack itemStack, @NotNull Level level, @NotNull LivingEntity livingEntity, int tick) {
-        if (level instanceof ServerLevel serverLevel) {
-            itemBuilder.releaseUsingTriggers.forEach(((predicate, path) -> {
-                if (predicate.matches(serverLevel, livingEntity)) {
-                    triggerAnim(livingEntity, GeoItem.getOrAssignId(itemStack, serverLevel), path.getA(), path.getB());
-                }
-            }));
+        if (level instanceof ServerLevel serverLevel && itemBuilder.releaseUsingAnimationCallback != null) {
+            itemBuilder.releaseUsingAnimationCallback.call(this, serverLevel, livingEntity, tick);
         }
         super.releaseUsing(itemStack, level, livingEntity, tick);
     }
@@ -82,14 +69,8 @@ public class AnimatableItem extends BasicItemJS implements GeoItem {
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        itemBuilder.animations.forEach((info, triggers) -> {
-            AnimationController<AnimatableItem> controller = new AnimationController<>(this, info.name(), info.transitionTickTime(), info.controller()::create);
-            if (triggers != null) {
-                triggers.forEach(controller::triggerableAnim);
-            }
-            controllers.add(controller);
-        });
+    public void registerControllers(AnimatableManager.ControllerRegistrar registrar) {
+        itemBuilder.controllers.forEach(controller -> registrar.add(controller.build(this)));
     }
 
     @Override
