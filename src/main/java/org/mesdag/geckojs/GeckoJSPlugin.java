@@ -8,6 +8,7 @@ import org.mesdag.geckojs.armor.AnimatableArmorBuilder;
 import org.mesdag.geckojs.block.AnimatableBlockBuilder;
 import org.mesdag.geckojs.item.AnimatableItemBuilder;
 import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.core.animation.EasingType;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
 public class GeckoJSPlugin extends KubeJSPlugin {
@@ -25,5 +26,6 @@ public class GeckoJSPlugin extends KubeJSPlugin {
     public void registerBindings(BindingsEvent event) {
         event.add("RawAnimation", RawAnimation.class);
         event.add("GeoItem", GeoItem.class);
+        event.add("EasingType", EasingType.class);
     }
 }

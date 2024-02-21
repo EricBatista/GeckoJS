@@ -1,5 +1,6 @@
 package org.mesdag.geckojs;
 
+import dev.latvian.mods.kubejs.typings.Info;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
@@ -47,26 +48,32 @@ public class ExtendedGeoModel<T extends GeoAnimatable> extends GeoModel<T> {
         public float scaleHeight = 1.0F;
         public boolean autoGlowing = false;
 
+        @Info("This method should return the ResourceLocation path to your .geo.json model file for this animatable")
         public void setModel(ResourceCallback<T> model) {
             this.model = model;
         }
 
+        @Info("The ResourceLocation path to your .geo.json model file for this animatable")
         public void setSimpleModel(ResourceLocation model) {
             this.simpleModel = model;
         }
 
+        @Info("This method should return the ResourceLocation path to your .png texture file for this animatable")
         public void setTexture(ResourceCallback<T> texture) {
             this.texture = texture;
         }
 
+        @Info("The ResourceLocation path to your .png texture file for this animatable")
         public void setSimpleTexture(ResourceLocation texture) {
             this.simpleTexture = texture;
         }
 
+        @Info("This method should return the ResourceLocation path to your .animation.json animation file for this animatable")
         public void setAnimation(ResourceCallback<T> animation) {
             this.animation = animation;
         }
 
+        @Info("The ResourceLocation path to your .animation.json animation file for this animatable")
         public void setSimpleAnimation(ResourceLocation animation) {
             this.simpleAnimation = animation;
         }

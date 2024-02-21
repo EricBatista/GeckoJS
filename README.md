@@ -1,5 +1,5 @@
 # Gecko JS
-Use GeckoLib to create animatable block/item by KubeJS
+Use GeckoLib to create animatable block/item/armor by KubeJS
 
 ## Simple Example
 ### Startup script
