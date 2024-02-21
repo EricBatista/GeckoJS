@@ -10,10 +10,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.mesdag.geckojs.block.AnimatableBlockEntity;
-import org.mesdag.geckojs.block.AnimatableBlockEntityRenderer;
-import software.bernie.example.GeckoLibMod;
-import software.bernie.example.registry.BlockRegistry;
+import org.mesdag.geckojs.block.entity.AnimatableBlockEntity;
+import org.mesdag.geckojs.block.entity.AnimatableBlockEntityRenderer;
 import software.bernie.geckolib.GeckoLib;
 
 import java.util.Hashtable;

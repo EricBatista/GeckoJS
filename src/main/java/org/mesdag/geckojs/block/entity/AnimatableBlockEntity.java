@@ -1,4 +1,4 @@
-package org.mesdag.geckojs.block;
+package org.mesdag.geckojs.block.entity;
 
 import dev.latvian.mods.kubejs.block.entity.BlockEntityJS;
 import net.minecraft.core.BlockPos;

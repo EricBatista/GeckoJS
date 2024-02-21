@@ -6,9 +6,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.LivingEntity;
 import org.mesdag.geckojs.ExtendedGeoModel;
-import org.mesdag.geckojs.block.AnimatableBlockBuilder;
-import org.mesdag.geckojs.block.AnimatableBlockEntity;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
@@ -20,7 +17,7 @@ import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
 public class AnimatableItemBuilder extends ItemBuilder {
-    public final HashMap<ControllerInfo, Hashtable<String, RawAnimation>> animations = new HashMap<>();
+    public final transient HashMap<ControllerInfo, Hashtable<String, RawAnimation>> animations = new HashMap<>();
     public final Hashtable<AnimationPredicateCallback, Tuple<String, String>> useTriggers = new Hashtable<>();
     public final Hashtable<AnimationPredicateCallback, Tuple<String, String>> finishUsingTriggers = new Hashtable<>();
     public final Hashtable<AnimationPredicateCallback, Tuple<String, String>> releaseUsingTriggers = new Hashtable<>();
@@ -72,6 +69,13 @@ public class AnimatableItemBuilder extends ItemBuilder {
 
     public AnimatableItemBuilder geoModel(Consumer<ExtendedGeoModel.Builder<AnimatableItem>> consumer){
         consumer.accept(itemModel.builder);
+        return this;
+    }
+
+    public AnimatableItemBuilder defaultGeoModel() {
+        itemModel.builder.setSimpleModel(new ResourceLocation(id.getNamespace(), "geo/block/" + id.getPath() + ".geo.json"));
+        itemModel.builder.setSimpleTexture(new ResourceLocation(id.getNamespace(), "textures/block/" + id.getPath() + ".png"));
+        itemModel.builder.setSimpleAnimation(new ResourceLocation(id.getNamespace(), "animations/block/" + id.getPath() + ".animation.json"));
         return this;
     }
 

@@ -1,11 +1,12 @@
-package org.mesdag.geckojs.item;
+package org.mesdag.geckojs.block;
 
+import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
+import dev.latvian.mods.rhino.util.HideFromJS;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import org.mesdag.geckojs.ExtendedGeoModel;
-import org.mesdag.geckojs.block.AnimatableBlockBuilder;
 
 import java.util.function.Consumer;
 
@@ -42,6 +43,12 @@ public class AnimatableBlockItemBuilder extends ItemBuilder {
     @Override
     public String getTranslationKeyGroup() {
         return "block";
+    }
+
+    @HideFromJS
+    @Override
+    public ItemBuilder modelJson(JsonObject json) {
+        return super.modelJson(json);
     }
 
     @Override

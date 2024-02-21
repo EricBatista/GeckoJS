@@ -1,4 +1,4 @@
-package org.mesdag.geckojs.item;
+package org.mesdag.geckojs.block;
 
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.item.BlockItem;
