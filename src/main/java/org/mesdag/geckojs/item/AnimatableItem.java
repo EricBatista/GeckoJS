@@ -56,12 +56,12 @@ public class AnimatableItem extends BasicItemJS implements GeoItem {
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
-            private AnimatableItemRenderer renderer;
+            private AnimatableItemRenderer<AnimatableItem> renderer;
 
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 if (renderer == null) {
-                    this.renderer = new AnimatableItemRenderer(itemBuilder.itemModel);
+                    this.renderer = new AnimatableItemRenderer<>(itemBuilder.itemModel);
                 }
                 return renderer;
             }

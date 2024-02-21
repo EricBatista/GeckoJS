@@ -14,6 +14,7 @@ public class AnimationControllerBuilder<T extends GeoAnimatable> {
     private transient AnimationController.AnimationStateHandler<T> animationStateHandler;
     private transient AnimationController.SoundKeyframeHandler<T> soundKeyframeHandler;
     private transient AnimationController.ParticleKeyframeHandler<T> particleKeyframeHandler;
+    private transient AnimationController.CustomKeyframeHandler<T> customKeyframeHandler;
     private final transient Hashtable<String, RawAnimation> animations = new Hashtable<>();
 
     public AnimationControllerBuilder<T> name(String name) {
@@ -41,6 +42,11 @@ public class AnimationControllerBuilder<T extends GeoAnimatable> {
         return this;
     }
 
+    public AnimationControllerBuilder<T> customKeyframe(AnimationController.CustomKeyframeHandler<T> handler) {
+        this.customKeyframeHandler = handler;
+        return this;
+    }
+
     public AnimationControllerBuilder<T> triggerableAnim(String animName, RawAnimation animation) {
         animations.put(animName, animation);
         return this;
@@ -51,6 +57,7 @@ public class AnimationControllerBuilder<T extends GeoAnimatable> {
         AnimationController<T> controller = new AnimationController<>(animatable, name, transitionTickTime, animationStateHandler);
         if (soundKeyframeHandler != null) controller.setSoundKeyframeHandler(soundKeyframeHandler);
         if (particleKeyframeHandler != null) controller.setParticleKeyframeHandler(particleKeyframeHandler);
+        if (customKeyframeHandler != null) controller.setCustomInstructionKeyframeHandler(customKeyframeHandler);
         animations.forEach(controller::triggerableAnim);
         return controller;
     }

@@ -45,6 +45,7 @@ public class ExtendedGeoModel<T extends GeoAnimatable> extends GeoModel<T> {
         ResourceLocation simpleAnimation;
         public float scaleWidth = 1.0F;
         public float scaleHeight = 1.0F;
+        public boolean autoGlowing = false;
 
         public void setModel(ResourceCallback<T> model) {
             this.model = model;
