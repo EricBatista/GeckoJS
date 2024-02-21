@@ -14,18 +14,19 @@ import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 import org.mesdag.geckojs.ExtendedGeoModel;
 import org.mesdag.geckojs.GeckoJS;
-import software.bernie.geckolib.model.DefaultedBlockGeoModel;
+import org.mesdag.geckojs.item.AnimatableBlockItemBuilder;
 
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
 public class AnimatableBlockBuilder extends BlockBuilder {
     public final AnimatableBlockEntityInfo blockEntityInfo = new AnimatableBlockEntityInfo(this);
-    private final ExtendedGeoModel<AnimatableBlockEntity> blockModel = new ExtendedGeoModel<>();
-    private DefaultedBlockGeoModel<AnimatableBlockEntity> defaultedBlockGeoModel;
+    public final ExtendedGeoModel<AnimatableBlockEntity> blockModel = new ExtendedGeoModel<>();
+    public AnimatableBlockItemBuilder itemBuilder;
 
     public AnimatableBlockBuilder(ResourceLocation id) {
         super(id);
+        this.itemBuilder = new AnimatableBlockItemBuilder(id, this);
         this.opaque = false;
     }
 
@@ -41,21 +42,30 @@ public class AnimatableBlockBuilder extends BlockBuilder {
     }
 
     public AnimatableBlockBuilder defaultGeoModel() {
-        this.defaultedBlockGeoModel = new DefaultedBlockGeoModel<>(id);
+        blockModel.builder.setSimpleModel(new ResourceLocation(id.getNamespace(), "geo/block/" + id.getPath() + ".geo.json"));
+        blockModel.builder.setSimpleTexture(new ResourceLocation(id.getNamespace(), "textures/block/" + id.getPath() + ".png"));
+        blockModel.builder.setSimpleAnimation(new ResourceLocation(id.getNamespace(), "animations/block/" + id.getPath() + ".animation.json"));
         return this;
+    }
+
+    public AnimatableBlockBuilder animatableItem(Consumer<AnimatableBlockItemBuilder> consumer) {
+        consumer.accept(itemBuilder);
+        return this;
+    }
+
+    @Override
+    public BlockBuilder noItem() {
+        this.itemBuilder = null;
+        return super.noItem();
     }
 
     @Override
     public void createAdditionalObjects() {
         if (itemBuilder != null) {
-            RegistryInfo.ITEM.addBuilder(itemBuilder);
+            RegistryInfo.ITEM.addBuilder(itemBuilder.hasModel ? itemBuilder : itemBuilder.defaultGeoModel());
         }
         RegistryInfo.BLOCK_ENTITY_TYPE.addBuilder(new BlockEntityBuilder(id, blockEntityInfo));
-        if (defaultedBlockGeoModel != null) {
-            GeckoJS.DEFAULTED.put(id, defaultedBlockGeoModel);
-        } else {
-            GeckoJS.REGISTERED.put(id, blockModel);
-        }
+        GeckoJS.REGISTERED_BLOCK.put(id, blockModel);
     }
 
     @Override

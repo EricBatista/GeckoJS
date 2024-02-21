@@ -12,18 +12,21 @@ public class ExtendedGeoModel<T extends GeoAnimatable> extends GeoModel<T> {
 
     @Override
     public ResourceLocation getModelResource(T animatable) {
+        if (builder.simpleModel != null) return builder.simpleModel;
         if (builder.model == null) return EMPTY;
         return builder.model.create(animatable);
     }
 
     @Override
     public ResourceLocation getTextureResource(T animatable) {
+        if (builder.simpleTexture != null) return builder.simpleTexture;
         if (builder.texture == null) return EMPTY;
         return builder.texture.create(animatable);
     }
 
     @Override
     public ResourceLocation getAnimationResource(T animatable) {
+        if (builder.simpleAnimation != null) return builder.simpleAnimation;
         if (builder.animation == null) return EMPTY;
         return builder.animation.create(animatable);
     }
@@ -37,6 +40,9 @@ public class ExtendedGeoModel<T extends GeoAnimatable> extends GeoModel<T> {
         ResourceCallback<T> model;
         ResourceCallback<T> texture;
         ResourceCallback<T> animation;
+        ResourceLocation simpleModel;
+        ResourceLocation simpleTexture;
+        ResourceLocation simpleAnimation;
         public float scaleWidth = 1.0F;
         public float scaleHeight = 1.0F;
 
@@ -44,12 +50,24 @@ public class ExtendedGeoModel<T extends GeoAnimatable> extends GeoModel<T> {
             this.model = model;
         }
 
+        public void setSimpleModel(ResourceLocation model) {
+            this.simpleModel = model;
+        }
+
         public void setTexture(ResourceCallback<T> texture) {
             this.texture = texture;
         }
 
+        public void setSimpleTexture(ResourceLocation texture) {
+            this.simpleTexture = texture;
+        }
+
         public void setAnimation(ResourceCallback<T> animation) {
             this.animation = animation;
+        }
+
+        public void setSimpleAnimation(ResourceLocation animation) {
+            this.simpleAnimation = animation;
         }
 
         public void setScale(float scale) {
