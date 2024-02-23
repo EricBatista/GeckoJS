@@ -11,6 +11,7 @@ public class AnimatableItemRenderer<T extends Item & GeoItem> extends GeoItemRen
         super(model);
         this.scaleWidth = model.builder.scaleWidth;
         this.scaleHeight = model.builder.scaleHeight;
+
         if (model.builder.autoGlowing) {
             addRenderLayer(new AutoGlowingGeoLayer<>(this));
         }

@@ -15,6 +15,7 @@ import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
@@ -61,7 +62,9 @@ public class AnimatableItem extends BasicItemJS implements GeoItem {
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 if (renderer == null) {
-                    this.renderer = new AnimatableItemRenderer<>(itemBuilder.itemModel);
+                    AnimatableItemRenderer<AnimatableItem> itemRenderer = new AnimatableItemRenderer<>(itemBuilder.itemModel);
+                    if (itemBuilder.useEntityGuiLighting) itemRenderer.useAlternateGuiLighting();
+                    this.renderer = itemRenderer;
                 }
                 return renderer;
             }
@@ -71,6 +74,7 @@ public class AnimatableItem extends BasicItemJS implements GeoItem {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar registrar) {
         itemBuilder.controllers.forEach(controller -> registrar.add(controller.build(this)));
+        itemBuilder.animations.forEach(animation -> registrar.add(new AnimationController<>(this, animation::create)));
     }
 
     @Override

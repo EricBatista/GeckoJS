@@ -13,8 +13,9 @@ import java.util.function.Consumer;
 @SuppressWarnings("unused")
 public class AnimatableBlockItemBuilder extends ItemBuilder {
     private final AnimatableBlockBuilder blockBuilder;
-    private final ExtendedGeoModel<AnimatableBlockItem> itemModel = new ExtendedGeoModel<>();
+    public final ExtendedGeoModel<AnimatableBlockItem> itemModel = new ExtendedGeoModel<>();
     public boolean hasModel = false;
+    public transient boolean useEntityGuiLighting = false;
 
     public AnimatableBlockItemBuilder(ResourceLocation id, AnimatableBlockBuilder blockBuilder) {
         super(id);
@@ -35,9 +36,14 @@ public class AnimatableBlockItemBuilder extends ItemBuilder {
         return this;
     }
 
+    public AnimatableBlockItemBuilder useEntityGuiLighting() {
+        this.useEntityGuiLighting = true;
+        return this;
+    }
+
     @Override
     public Item createObject() {
-        return new AnimatableBlockItem(blockBuilder.get(), createItemProperties(), itemModel);
+        return new AnimatableBlockItem(blockBuilder.get(), createItemProperties(), this);
     }
 
     @Override

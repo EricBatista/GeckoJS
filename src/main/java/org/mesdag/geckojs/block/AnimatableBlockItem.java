@@ -4,7 +4,6 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import org.mesdag.geckojs.ExtendedGeoModel;
 import org.mesdag.geckojs.item.AnimatableItemRenderer;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -15,11 +14,11 @@ import java.util.function.Consumer;
 
 public class AnimatableBlockItem extends BlockItem implements GeoItem {
     private final AnimatableInstanceCache CACHE = GeckoLibUtil.createInstanceCache(this);
-    private final ExtendedGeoModel<AnimatableBlockItem> model;
+    private final AnimatableBlockItemBuilder blockItemBuilder;
 
-    public AnimatableBlockItem(Block block, Properties properties, ExtendedGeoModel<AnimatableBlockItem> model) {
+    public AnimatableBlockItem(Block block, Properties properties, AnimatableBlockItemBuilder blockItemBuilder) {
         super(block, properties);
-        this.model = model;
+        this.blockItemBuilder = blockItemBuilder;
     }
 
     @Override
@@ -30,7 +29,9 @@ public class AnimatableBlockItem extends BlockItem implements GeoItem {
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 if (this.renderer == null) {
-                    this.renderer = new AnimatableItemRenderer<>(model);
+                    AnimatableItemRenderer<AnimatableBlockItem> itemRenderer = new AnimatableItemRenderer<>(blockItemBuilder.itemModel);
+                    if (blockItemBuilder.useEntityGuiLighting) itemRenderer.useAlternateGuiLighting();
+                    this.renderer = itemRenderer;
                 }
                 return this.renderer;
             }

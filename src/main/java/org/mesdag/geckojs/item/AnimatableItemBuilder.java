@@ -12,6 +12,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.mesdag.geckojs.AnimationControllerBuilder;
 import org.mesdag.geckojs.ExtendedGeoModel;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
@@ -24,6 +26,8 @@ public class AnimatableItemBuilder extends ItemBuilder {
     public FinishUsingAnimationCallback finishUsingAnimationCallback;
     public ReleaseUsingAnimationCallback releaseUsingAnimationCallback;
     public final transient ArrayList<AnimationControllerBuilder<AnimatableItem>> controllers = new ArrayList<>();
+    public final transient ArrayList<ControllerCallBack> animations = new ArrayList<>();
+    public transient boolean useEntityGuiLighting = false;
 
     public AnimatableItemBuilder(ResourceLocation id) {
         super(id);
@@ -44,6 +48,11 @@ public class AnimatableItemBuilder extends ItemBuilder {
         return this;
     }
 
+    public AnimatableItemBuilder addController(ControllerCallBack callBack) {
+        animations.add(callBack);
+        return this;
+    }
+
     public AnimatableItemBuilder addController(Consumer<AnimationControllerBuilder<AnimatableItem>> consumer) {
         AnimationControllerBuilder<AnimatableItem> builder = new AnimationControllerBuilder<>();
         consumer.accept(builder);
@@ -60,6 +69,11 @@ public class AnimatableItemBuilder extends ItemBuilder {
         itemModel.builder.setSimpleModel(new ResourceLocation(id.getNamespace(), "geo/item/" + id.getPath() + ".geo.json"));
         itemModel.builder.setSimpleTexture(new ResourceLocation(id.getNamespace(), "textures/item/" + id.getPath() + ".png"));
         itemModel.builder.setSimpleAnimation(new ResourceLocation(id.getNamespace(), "animations/item/" + id.getPath() + ".animation.json"));
+        return this;
+    }
+
+    public AnimatableItemBuilder useEntityGuiLighting() {
+        this.useEntityGuiLighting = true;
         return this;
     }
 
@@ -98,5 +112,10 @@ public class AnimatableItemBuilder extends ItemBuilder {
     @FunctionalInterface
     public interface ReleaseUsingAnimationCallback {
         void call(AnimatableItem self, ServerLevel serverLevel, LivingEntity livingEntity, int tick);
+    }
+
+    @FunctionalInterface
+    public interface ControllerCallBack {
+        PlayState create(AnimationState<AnimatableItem> state);
     }
 }
