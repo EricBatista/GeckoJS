@@ -26,7 +26,7 @@ public class AnimatableItemBuilder extends ItemBuilder {
     public FinishUsingAnimationCallback finishUsingAnimationCallback;
     public ReleaseUsingAnimationCallback releaseUsingAnimationCallback;
     public final transient ArrayList<AnimationControllerBuilder<AnimatableItem>> controllers = new ArrayList<>();
-    public final transient ArrayList<ControllerCallBack> animations = new ArrayList<>();
+    public final transient ArrayList<AnimationCallback> animations = new ArrayList<>();
     public transient boolean useEntityGuiLighting = false;
 
     public AnimatableItemBuilder(ResourceLocation id) {
@@ -48,7 +48,7 @@ public class AnimatableItemBuilder extends ItemBuilder {
         return this;
     }
 
-    public AnimatableItemBuilder addController(ControllerCallBack callBack) {
+    public AnimatableItemBuilder addAnimation(AnimationCallback callBack) {
         animations.add(callBack);
         return this;
     }
@@ -115,7 +115,7 @@ public class AnimatableItemBuilder extends ItemBuilder {
     }
 
     @FunctionalInterface
-    public interface ControllerCallBack {
+    public interface AnimationCallback {
         PlayState create(AnimationState<AnimatableItem> state);
     }
 }

@@ -26,7 +26,7 @@ public class AnimatableArmorBuilder extends ArmorItemBuilder {
     private static final JsonObject bootsModel = GSON.fromJson("{\"parent\":\"builtin/entity\",\"display\":{\"thirdperson_righthand\":{\"translation\":[0,3.5,1],\"scale\":[0.55,0.55,0.55]},\"thirdperson_lefthand\":{\"translation\":[0,3.5,1],\"scale\":[0.55,0.55,0.55]},\"firstperson_righthand\":{\"rotation\":[0,-90,25],\"translation\":[1.13,6.7,-1.5],\"scale\":[0.68,0.68,0.68]},\"firstperson_lefthand\":{\"rotation\":[0,-90,25],\"translation\":[1.13,6.7,-1.5],\"scale\":[0.68,0.68,0.68]},\"ground\":{\"translation\":[0,2,0],\"scale\":[0.5,0.5,0.5]},\"gui\":{\"rotation\":[20,-20,0],\"translation\":[0,5,0]},\"fixed\":{\"rotation\":[0,180,0],\"translation\":[0,6,0]}}}", JsonObject.class);
     public final ExtendedGeoModel<AnimatableArmorItem> armorModel = new ExtendedGeoModel<>();
     public final transient ArrayList<AnimationControllerBuilder<AnimatableArmorItem>> controllers = new ArrayList<>();
-    public final transient ArrayList<ControllerCallBack> animations = new ArrayList<>();
+    public final transient ArrayList<AnimationCallback> animations = new ArrayList<>();
     public boolean useGeoModel = false;
     public VisibilityCallback visibilityCallback;
 
@@ -34,7 +34,7 @@ public class AnimatableArmorBuilder extends ArmorItemBuilder {
         super(id, type);
     }
 
-    public AnimatableArmorBuilder addController(ControllerCallBack callBack) {
+    public AnimatableArmorBuilder addAnimation(AnimationCallback callBack) {
         animations.add(callBack);
         return this;
     }
@@ -89,7 +89,7 @@ public class AnimatableArmorBuilder extends ArmorItemBuilder {
     }
 
     @FunctionalInterface
-    public interface ControllerCallBack {
+    public interface AnimationCallback {
         PlayState create(AnimationState<AnimatableArmorItem> state);
     }
 
