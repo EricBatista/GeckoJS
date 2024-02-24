@@ -3,6 +3,7 @@ package org.mesdag.geckojs;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.script.BindingsEvent;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
 import org.mesdag.geckojs.armor.AnimatableArmorBuilder;
 import org.mesdag.geckojs.block.AnimatableBlockBuilder;
@@ -37,5 +38,6 @@ public class GeckoJSPlugin extends KubeJSPlugin {
         event.add("GeoItem", GeoItem.class);
         event.add("EasingType", EasingType.class);
         event.add("DataTickets", DataTickets.class);
+        event.add("EquipmentSlot", EquipmentSlot.class);
     }
 }

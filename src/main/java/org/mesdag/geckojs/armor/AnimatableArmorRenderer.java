@@ -1,7 +1,9 @@
 package org.mesdag.geckojs.armor;
 
 import net.minecraft.world.entity.EquipmentSlot;
+import org.jetbrains.annotations.Nullable;
 import org.mesdag.geckojs.ExtendedGeoModel;
+import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoArmorRenderer;
 import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 
@@ -25,5 +27,10 @@ public class AnimatableArmorRenderer extends GeoArmorRenderer<AnimatableArmorIte
         } else {
             visibilityCallback.apply(this, currentSlot);
         }
+    }
+
+    @Override
+    public void setBoneVisible(@Nullable GeoBone bone, boolean visible) {
+        super.setBoneVisible(bone, visible);
     }
 }

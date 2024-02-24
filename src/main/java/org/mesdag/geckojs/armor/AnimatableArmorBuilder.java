@@ -11,7 +11,6 @@ import org.mesdag.geckojs.AnimationControllerBuilder;
 import org.mesdag.geckojs.ExtendedGeoModel;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.renderer.GeoArmorRenderer;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
@@ -95,6 +94,6 @@ public class AnimatableArmorBuilder extends ArmorItemBuilder {
 
     @FunctionalInterface
     public interface VisibilityCallback {
-        void apply(GeoArmorRenderer<AnimatableArmorItem> renderer, EquipmentSlot slot);
+        void apply(AnimatableArmorRenderer renderer, EquipmentSlot slot);
     }
 }
