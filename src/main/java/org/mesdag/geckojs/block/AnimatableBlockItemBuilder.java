@@ -1,9 +1,7 @@
 package org.mesdag.geckojs.block;
 
-import com.google.gson.JsonObject;
 import dev.latvian.mods.kubejs.generator.AssetJsonGenerator;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
-import dev.latvian.mods.rhino.util.HideFromJS;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import org.mesdag.geckojs.ExtendedGeoModel;
@@ -51,13 +49,12 @@ public class AnimatableBlockItemBuilder extends ItemBuilder {
         return "block";
     }
 
-    @HideFromJS
-    @Override
-    public ItemBuilder modelJson(JsonObject json) {
-        return super.modelJson(json);
-    }
-
     @Override
     public void generateAssetJsons(AssetJsonGenerator generator) {
+        if (modelJson == null) {
+            generator.itemModel(id, model -> model.parent(parentModel.isEmpty() ? "geckojs:item/item" : parentModel));
+        } else {
+            generator.json(AssetJsonGenerator.asItemModelLocation(id), modelJson);
+        }
     }
 }

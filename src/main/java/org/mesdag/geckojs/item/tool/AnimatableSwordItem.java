@@ -1,10 +1,11 @@
-package org.mesdag.geckojs.item.handheld;
+package org.mesdag.geckojs.item.tool;
 
 import com.google.common.collect.Multimap;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -22,6 +23,7 @@ import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
@@ -39,8 +41,8 @@ public class AnimatableSwordItem extends SwordItem implements GeoItem {
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
-        if (level instanceof ServerLevel serverLevel && swordItemBuilder.useAnimationCallback != null) {
-            swordItemBuilder.useAnimationCallback.call(this, serverLevel, player, hand);
+        if (level instanceof ServerLevel serverLevel && swordItemBuilder.usingAnimationCallback != null) {
+            swordItemBuilder.usingAnimationCallback.call(this, serverLevel, (ServerPlayer) player, hand);
         }
         return super.use(level, player, hand);
     }
@@ -97,6 +99,7 @@ public class AnimatableSwordItem extends SwordItem implements GeoItem {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar registrar) {
         swordItemBuilder.controllers.forEach(controller -> registrar.add(controller.build(this)));
+        swordItemBuilder.animations.forEach(animation -> registrar.add(new AnimationController<>(this, animation::create)));
     }
 
     @Override
@@ -104,7 +107,7 @@ public class AnimatableSwordItem extends SwordItem implements GeoItem {
         return CACHE;
     }
 
-    public static class Builder extends AnimatableHandheldItemBuilder<AnimatableSwordItem> {
+    public static class Builder extends AnimatableTiredItemBuilder<AnimatableSwordItem> {
         public Builder(ResourceLocation id) {
             super(id, 3F, -2.4F);
         }

@@ -1,4 +1,4 @@
-package org.mesdag.geckojs.armor;
+package org.mesdag.geckojs.item.armor;
 
 import net.minecraft.world.entity.EquipmentSlot;
 import org.jetbrains.annotations.Nullable;
@@ -8,13 +8,13 @@ import software.bernie.geckolib.renderer.GeoArmorRenderer;
 import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 
 public class AnimatableArmorRenderer extends GeoArmorRenderer<AnimatableArmorItem> {
-    private final AnimatableArmorBuilder.VisibilityCallback visibilityCallback;
+    private final AnimatableArmorBuilder.BoneVisibilityCallback boneVisibilityCallback;
 
-    public AnimatableArmorRenderer(ExtendedGeoModel<AnimatableArmorItem> model, AnimatableArmorBuilder.VisibilityCallback visibilityCallback) {
+    public AnimatableArmorRenderer(ExtendedGeoModel<AnimatableArmorItem> model, AnimatableArmorBuilder.BoneVisibilityCallback boneVisibilityCallback) {
         super(model);
         this.scaleWidth = model.builder.scaleWidth;
         this.scaleHeight = model.builder.scaleHeight;
-        this.visibilityCallback = visibilityCallback;
+        this.boneVisibilityCallback = boneVisibilityCallback;
         if (model.builder.autoGlowing) {
             addRenderLayer(new AutoGlowingGeoLayer<>(this));
         }
@@ -22,10 +22,10 @@ public class AnimatableArmorRenderer extends GeoArmorRenderer<AnimatableArmorIte
 
     @Override
     protected void applyBoneVisibilityBySlot(EquipmentSlot currentSlot) {
-        if (visibilityCallback == null) {
+        if (boneVisibilityCallback == null) {
             super.applyBoneVisibilityBySlot(currentSlot);
         } else {
-            visibilityCallback.apply(this, currentSlot);
+            boneVisibilityCallback.apply(this, currentSlot);
         }
     }
 

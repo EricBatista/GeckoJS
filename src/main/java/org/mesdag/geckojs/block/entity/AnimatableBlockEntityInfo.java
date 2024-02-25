@@ -11,13 +11,13 @@ import java.util.ArrayList;
 
 @SuppressWarnings("unused")
 public class AnimatableBlockEntityInfo extends BlockEntityInfo {
-    public final transient ArrayList<ControllerCallBack> animations = new ArrayList<>();
+    public final transient ArrayList<AnimationStateCallBack> animations = new ArrayList<>();
 
     public AnimatableBlockEntityInfo(AnimatableBlockBuilder blockBuilder) {
         super(blockBuilder);
     }
 
-    public AnimatableBlockEntityInfo addController(ControllerCallBack callBack) {
+    public AnimatableBlockEntityInfo addAnimation(AnimationStateCallBack callBack) {
         animations.add(callBack);
         return this;
     }
@@ -28,7 +28,7 @@ public class AnimatableBlockEntityInfo extends BlockEntityInfo {
     }
 
     @FunctionalInterface
-    public interface ControllerCallBack {
+    public interface AnimationStateCallBack {
         PlayState create(AnimationState<AnimatableBlockEntity> state);
     }
 }

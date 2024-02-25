@@ -17,7 +17,6 @@ import org.mesdag.geckojs.ExtendedGeoModel;
 import org.mesdag.geckojs.GeckoJS;
 import org.mesdag.geckojs.block.entity.AnimatableBlockEntity;
 import org.mesdag.geckojs.block.entity.AnimatableBlockEntityInfo;
-import org.mesdag.geckojs.item.AnimatableItemBuilder;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -87,9 +86,6 @@ public class AnimatableBlockBuilder extends BlockBuilder {
             "textures", Map.of("particle", id.getNamespace() + ":block/" + id.getPath())
         )).getAsJsonObject();
         generator.json(new ResourceLocation(id.getNamespace(), "models/block/" + id.getPath()), blockModelJson);
-        if (itemBuilder != null) {
-            generator.json(AssetJsonGenerator.asItemModelLocation(id), AnimatableItemBuilder.itemModelJson);
-        }
     }
 
     @HideFromJS

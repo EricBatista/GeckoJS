@@ -12,7 +12,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.ArrayList;
 
 public class AnimatableBlockEntity extends BlockEntityJS implements GeoBlockEntity {
-    private final ArrayList<AnimatableBlockEntityInfo.ControllerCallBack> animations;
+    private final ArrayList<AnimatableBlockEntityInfo.AnimationStateCallBack> animations;
     private final AnimatableInstanceCache CACHE = GeckoLibUtil.createInstanceCache(this);
 
     public AnimatableBlockEntity(BlockPos blockPos, BlockState blockState, AnimatableBlockEntityInfo entityInfo) {

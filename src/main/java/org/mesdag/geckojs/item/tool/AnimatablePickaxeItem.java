@@ -1,10 +1,11 @@
-package org.mesdag.geckojs.item.handheld;
+package org.mesdag.geckojs.item.tool;
 
 import com.google.common.collect.Multimap;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -22,6 +23,7 @@ import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
@@ -39,8 +41,8 @@ public class AnimatablePickaxeItem extends PickaxeItem implements GeoItem {
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
-        if (level instanceof ServerLevel serverLevel && pickaxeItemBuilder.useAnimationCallback != null) {
-            pickaxeItemBuilder.useAnimationCallback.call(this, serverLevel, player, hand);
+        if (level instanceof ServerLevel serverLevel && pickaxeItemBuilder.usingAnimationCallback != null) {
+            pickaxeItemBuilder.usingAnimationCallback.call(this, serverLevel, (ServerPlayer) player, hand);
         }
         return super.use(level, player, hand);
     }
@@ -97,6 +99,7 @@ public class AnimatablePickaxeItem extends PickaxeItem implements GeoItem {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar registrar) {
         pickaxeItemBuilder.controllers.forEach(controller -> registrar.add(controller.build(this)));
+        pickaxeItemBuilder.animations.forEach(animation -> registrar.add(new AnimationController<>(this, animation::create)));
     }
 
     @Override
@@ -104,7 +107,7 @@ public class AnimatablePickaxeItem extends PickaxeItem implements GeoItem {
         return CACHE;
     }
 
-    public static class Builder extends AnimatableHandheldItemBuilder<AnimatablePickaxeItem>{
+    public static class Builder extends AnimatableTiredItemBuilder<AnimatablePickaxeItem> {
         public Builder(ResourceLocation id) {
             super(id, 1F, -2.8F);
         }

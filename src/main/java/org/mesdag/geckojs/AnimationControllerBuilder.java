@@ -6,6 +6,7 @@ import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.EasingType;
 import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.Hashtable;
 import java.util.function.Function;
@@ -14,7 +15,7 @@ import java.util.function.Function;
 public class AnimationControllerBuilder<T extends GeoAnimatable> {
     private transient String name = "base_controller";
     private transient int transitionTickTime = 0;
-    private transient AnimationController.AnimationStateHandler<T> animationStateHandler;
+    private transient AnimationController.AnimationStateHandler<T> animationStateHandler = state -> PlayState.STOP;
     private transient AnimationController.SoundKeyframeHandler<T> soundKeyframeHandler;
     private transient AnimationController.ParticleKeyframeHandler<T> particleKeyframeHandler;
     private transient AnimationController.CustomKeyframeHandler<T> customKeyframeHandler;

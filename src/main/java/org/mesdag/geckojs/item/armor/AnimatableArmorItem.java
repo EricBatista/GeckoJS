@@ -1,4 +1,4 @@
-package org.mesdag.geckojs.armor;
+package org.mesdag.geckojs.item.armor;
 
 import com.google.common.collect.Multimap;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
@@ -32,7 +32,7 @@ public class AnimatableArmorItem extends ArmorItem implements GeoItem {
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
             private AnimatableArmorRenderer armorRenderer;
             private AnimatableItemRenderer<AnimatableArmorItem> itemRenderer;
@@ -40,7 +40,7 @@ public class AnimatableArmorItem extends ArmorItem implements GeoItem {
             @Override
             public @NotNull HumanoidModel<?> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
                 if (armorRenderer == null) {
-                    this.armorRenderer = new AnimatableArmorRenderer(armorBuilder.armorModel, armorBuilder.visibilityCallback);
+                    this.armorRenderer = new AnimatableArmorRenderer(armorBuilder.armorModel, armorBuilder.boneVisibilityCallback);
                 }
                 armorRenderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
                 return armorRenderer;

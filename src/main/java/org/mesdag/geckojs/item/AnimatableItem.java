@@ -2,7 +2,9 @@ package org.mesdag.geckojs.item;
 
 import dev.latvian.mods.kubejs.item.custom.BasicItemJS;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,9 +24,9 @@ import java.util.function.Consumer;
 
 public class AnimatableItem extends BasicItemJS implements GeoItem {
     private final AnimatableInstanceCache CACHE = GeckoLibUtil.createInstanceCache(this);
-    private final AnimatableItemBuilder itemBuilder;
+    private final AbstractAnimatableItemBuilder<AnimatableItem> itemBuilder;
 
-    public AnimatableItem(AnimatableItemBuilder builder) {
+    public AnimatableItem(AbstractAnimatableItemBuilder<AnimatableItem> builder) {
         super(builder);
         this.itemBuilder = builder;
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
@@ -32,8 +34,8 @@ public class AnimatableItem extends BasicItemJS implements GeoItem {
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
-        if (level instanceof ServerLevel serverLevel && itemBuilder.useAnimationCallback != null) {
-            itemBuilder.useAnimationCallback.call(this, serverLevel, player, hand);
+        if (level instanceof ServerLevel serverLevel && itemBuilder.usingAnimationCallback != null) {
+            itemBuilder.usingAnimationCallback.call(this, serverLevel, (ServerPlayer) player, hand);
         }
         return super.use(level, player, hand);
     }
@@ -80,5 +82,16 @@ public class AnimatableItem extends BasicItemJS implements GeoItem {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return CACHE;
+    }
+
+    public static class Builder extends AbstractAnimatableItemBuilder<AnimatableItem> {
+        public Builder(ResourceLocation id) {
+            super(id);
+        }
+
+        @Override
+        public AnimatableItem createObject() {
+            return new AnimatableItem(this);
+        }
     }
 }
