@@ -36,7 +36,7 @@ StartupEvents.registry("item", event => {
 
 StartupEvents.registry("block", event => {
     event.create("geckojs:example_block", "animatable")
-        .cube(1, 1, 1, 15, 15, 15, true)
+        .box(1, 1, 1, 15, 15, 15, true)
         .animatableBlockEntity(info => {
             info.addAnimation(state => state.setAndContinue(RawAnimation.begin().thenLoop("rotating")))
         })
