@@ -9,13 +9,9 @@ StartupEvents.registry("block", event => {
     event.create("geckojs:example_block", "animatable")
         .box(1, 1, 1, 15, 15, 15, true)
         .animatableBlockEntity(blockEntity => {
-            blockEntity.addController(state => state.setAndContinue(rotating))
+            blockEntity.addAnimation(state => state.setAndContinue(rotating))
         })
-        .geoModel(geo => {
-            geo.setAnimation(blockEntity => "geckojs:animations/example_block.animation.json")
-            geo.setModel(blockEntity => "geckojs:geo/example_block.geo.json")
-            geo.setTexture(blockEntity => "geckojs:textures/example_block.png")
-        })
+        .defaulteoMoel()
 })
 ```
 
