@@ -54,7 +54,7 @@ StartupEvents.registry("block", event => {
 }
 ```
 
-### Animation ```kubejs/assets/geckojs/animations/example_block.animations.json```
+### Animation ```kubejs/assets/geckojs/animations/example_block.animation.json```
 ```json
 {
     "format_version": "1.8.0",
